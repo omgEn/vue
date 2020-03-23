@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+<div id="app">
+	<!-- 当为true时对应的类名会加载 -->
+	<div :class="{'active':isActive}"></div>
+	<div class="static" :class="{'active':isActive,'error':isError}"></div>
+	<!-- 数组语法 -->
+	<div :class="[activeCls,errorCls]"></div>
+		<!-- 渲染后的结果<div class="active error"></div> -->
+	<!-- 或三元表达式切换class -->
+	<div :class="{isActive?active:'',errorCls}"></div>
+	<div :class="[{'active':isActive},errorCls]"></div>
+	<!-- 与对象语法一样，class也可以使用data、computed和methods
+	-->
+	<button :class="classes2"></button>
+		<!-- 渲染结果<button class="btn btn-large btn-disabled"></button> -->
+		
+	<!-- 如果在自定义组件上使用class或:class，样式规则会直接应用到这个组件的根元素上 -->
+	<my-component :class="{'active':isActive}"></my-component>
+		<!-- 结果：<p class="article active"></p> -->
+<!-- 
+这种用法仅适用于自定义组件的最外层是一个根元素，
+如果要给具体的子元素设置类名，应当使用组件的props传递。
+-->
+</div>
+
+<!-- style -->
+<div id="app2">
+	<div :style="{'color':color,'fontSize':fontSize+'px','boder-width':width+'px'}"></div>
+	<div :style='styles'></div>
+	<!-- 数组写法 -->
+	<div :style="[styleA,styleB
+	]"></div>
+</div>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script>
+	Vue.component('my-component',{
+		template:'<p class="article">some text</p>'
+	})
+	var app = new Vue({;
+		el:'#app',
+		data: {
+			isActive: true,
+			idError: false,
+			activeCls:'active',
+			errorCls:'error'
+		},
+		// 当:一般当class的条件多余两个时，可以用data或computed
+			//用data绑定一个Object数据
+		computed:{
+			classes:function(){
+				return {
+					active:this.isActive&&!this.error,
+					'text-fail':this.error&&this.error.type === 'fail'
+				}
+			},
+			classes2:function(){
+			//btn始终会被应用，当size不为空btn-,当disabled为true，应用btn-disabled
+				return {
+					'btn',
+					{
+						['btn-'+this.size]:this.size !== '',
+						['btn-disabled']:this.disabled
+					}
+				}
+			}
+		}
+	});
+	
+	var app2 = new Vue({
+		el:'app2',
+		data:{
+			styles:{
+				color:'red',
+				fontSize:14+'px'
+			}
+		}
+	})
+</script>
+
+</body>
+</html>

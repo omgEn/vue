@@ -1,0 +1,12 @@
+/*style.css*/
+#app {
+	font-size: 24px;
+	color: orange
+}
+
+/* 
+ CSS是通过JavaScript动态创建<style>来写入的,即diamante都编译在main.js文件里
+ 但在实际业务中,不希望这么做,业务项目大了样式会很多,都放在js太占体积,还不能做缓存.
+ 于是引入了插件Plugins
+ */
+/*  npm i optimize-css-assets-webpack-plugin*/

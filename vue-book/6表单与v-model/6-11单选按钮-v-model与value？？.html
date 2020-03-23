@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>单选按钮</title>
+</head>
+<body>
+<!--
+当单选按钮在单独使用时，不需要v-model,直接用v-bind绑定布尔值；
+但是不会双向绑定，为啥？
+	-->
+<div id="app">
+	<!-- 这里不是双向绑定，只是初始化 -->
+	<input type="radio" :checked='picked'>
+	<label for="">单选按钮</label>
+	
+	<br>动态绑定数据
+	<!-- 当选中时，app.picked===app.value==1243 
+	是v-model会绑定value吗-->
+	<input type="radio" v-model='picked' :value='value'>
+	<p>{{picked}}</p>
+	<p>{{value}}</p>
+</div>
+
+<hr>组合实现互斥选项，则需要v-model配合value使用
+<div id="app2" class="app2">
+	<input type="radio" v-model='picked' value='html' id='html'>
+	<label for="html">HTML</label>
+	<br>
+	<input type="radio" v-model='picked' value='js' id='js'>
+	<label for="js">JS</label>
+	<br>
+	<input type="radio" v-model='picked' value='css' id='css'>
+	<label for="html">css</label>
+	<br>
+	<p>选择的项是:{{picked}}</p>
+<!-- 利用v-mode绑定picked picked是对应的value的值
+原理是啥？？-->
+<!-- 数据picked的值与单选按钮value一致时，就会选中该项-->
+</div>
+
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script>
+	var app = new Vue({
+		el:'#app',
+		data: {
+			picked:false,
+			value: 1243
+		}
+	});
+	var app2 = new Vue({
+		el:'#app2',
+		data:{
+			picked:'js'
+		}
+	})
+</script>
+
+</body>
+</html>

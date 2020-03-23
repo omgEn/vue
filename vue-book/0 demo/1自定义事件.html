@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+<script>
+	function EventTarget(){
+		this.handlers = {};
+		//handlers属性，用于存储事件处理程序
+	}
+	EventTarget.prototype = {
+		constructor: EventTarget,
+		//addHandler()用于注册给定类型事件的时间处理程序
+		//参数：事件类型和用于处理该事件的函数
+		addHandler: function(type,handler){
+			//先检查handlers属性中是否已经存在一个针对该事件类型的数组，无就创建
+			if(typeof this.handlers[type] == 'undefined'){
+				this.handlers[type] = [];
+			}
+			this.handlers[type].push(handler);
+		},
+		//fire():用于触发一个事件
+		fire: function(event){
+			if(!event.target){
+				event.target = this;
+			}
+			if(this.handlers[event.type] instanceof Array){
+				var handlers = this.handlers[event.type];
+				for(var i=0, len=handlers.length; i<len;i++){
+					handlers[i](event);
+				}
+			}
+		},
+		//removeHandler():用于注销某个事件类型的世界处理程序
+		removeHandler:function(type,handler){
+			if(this.handlers[type] instanceof Array){
+				var handlers = this.handlers[type];
+				for(var i=0, len=handlers.length;i<len;i++){
+					if(handlers[i]===handler){
+						break;
+					}
+				}
+				handlers.splice(i,1);
+			}
+		}
+	}
+	//使用EventTarget类型的自定义事件可以如下使用
+	function handleMessage(event){
+	//用于处理messsage事件
+		console.log("Message received "+event.message);
+	}
+	//创建一个新对象
+	var target = new EventTarget();
+	//添加一个事件处理程序
+	target.addHandler('message',handleMessage);
+	//触发事件
+	target.fire({type:'message',message:'Hello world!'});
+	//删除事件处理程序
+	target.removeHandler('massage',handleMessage);
+	//再次，应没有处理程序
+	target.fire({type:'message',message:'Hello world'});
+	
+	//因为这种功能是封装在一种自定义类型中，其他对象可以继承EventTarget并获得这个行为
+	function Person(name,age){
+		EventTarget.call(this);
+		this.name = name;
+		this.age = age;
+	}
+	inheritPrototype(Person,EventTarget);
+	Person.prototype.say = function(message){
+		this.fire({type:"message",message:message});
+	};
+/*Person类型使用了计生组合继承（第6章）方法来继承EventTarget。一旦,
+一旦调用了say()方法，便触发了事件，它包含了消息的细节。
+在某种类型的另外的方法中调用fire()方法是很常见的，同时它通常不是公开调用的。
+这段代码可以照如下方式使用
+*/
+	function handleMessage(event){
+		console.log(event.target.name+ "says" + event.message);
+	}
+	//创建新Person
+	var person = new Person("Nicholas", 29);
+	//添加一个事件处理程序
+	person.addHandler("message",handleMessage);
+	//在该对象上调用1个方法，它触发消息事件
+	person.say("Hi there.")
+	//调用say()方法并传递一个消息时，就会触发message事件。然后她又会调用handleMessage()
+	
+</script>
+</body>
+</html>

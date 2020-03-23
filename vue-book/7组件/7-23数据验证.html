@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+<div id="app">
+	<my-component></my-component>
+	<my-child :value='item'></my-child>
+	<!-- <my-child></my-child> -->
+</div>
+
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script>
+/* 
+当 prop需要验证时，就需要对象写法
+当你的组件需要提供给别使用时，推荐都精修数据验证
+ */
+	Vue.component('my-component',{
+		props:{
+			//必须是数字类型
+			propA: Number,
+			//必须是String或数字类型
+			propB: [String, Number],
+			//传入默认值
+			propC: {
+				type: Boolean,
+				default: true
+			},
+			//必传
+			propD: {
+				type: Number,
+				require: true
+			},
+			//如果是数组或对象，默认值必须是一个函数来返回
+			propE: {
+				type: Array,
+				default: function(){
+					return [];
+				}
+			},
+			//自定义一个验证函数
+			ropF: {
+				validator: function(value){
+					return value>10;
+				}
+			},
+		},
+		template: `<div>dd</div>`
+	});
+	
+	var Child = {
+		props:{
+			value:{
+				type: Number,
+				required: true
+			}
+		},
+		template: `<div>son</div>`,
+	};
+	
+	var app = new Vue({
+		el: '#app',
+		data: {
+			item: 1
+		},
+		components: {
+			'my-child': Child
+		}
+	})
+</script>
+
+</body>
+</html>

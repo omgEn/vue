@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+<div id="app">
+	<ele></ele>
+	<ele2></ele2>
+</div>
+
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script>
+	Vue.component('ele',{
+		template:`
+			<div id="element" :class="{show:show}" @click="handleClick">
+			文本内容 </div>`,
+		data:function(){
+			return {
+				show: true
+			}
+		},
+		methods:{
+			handleClick:function(){
+				console.log('clicked!');
+			}
+		}
+	});
+	// ele用render改写
+	Vue.component('ele2',{
+		render: function(createElement){
+			return createElement(
+				'div',
+				{
+					// 动态绑定class，同:class
+					class:{
+						'show': this.show
+					},
+					// 普通html特性
+					attrs: {
+						id: 'element'
+					},
+					// 给div绑定click事件
+					on: {
+						click: this.handleClick
+					}
+				},
+				'render改造'
+			)
+		},
+		data:function(){
+			return {
+				show: true
+			}
+		},
+		methods:{
+			handleClick:function(){
+				console.log('render clicked!');
+			}
+		}
+	});
+	var app = new Vue({
+		el:'#app'
+	});
+</script>
+</body>
+</html>
+
+<script>
+createElement(
+	// 1{String|OBject|Function}
+	// 一个HTML标签，组件选项，或一个函数
+	// 必须return上述其中一个
+	'div',
+	// 2{Object}，一个对应属性的数据对象，可选；可以在template中使用
+	{
+		// 和v-bind:class一样的API
+		'class': {
+			foo: true,
+			bar: false
+		},
+		// 和v-bind:style一样的API
+		style: {
+			color: 'red',
+			fontSize: '14px'
+		}
+		// 正常的HTML特性
+		attrs: {
+			is: 'foo'
+		}
+		// 组件props
+		props: {
+			myProp: 'bar'
+		},
+		// DOM属性
+		domProps: {
+			innerHTML: 'baz'
+		},
+		// 自定义事件监听器"on"
+		// 不支持如v-on:keyup.enter的修饰器
+		// 需要手动匹配keyCode
+		on: {
+			click: this.clickHandler
+		},
+		// 仅对于组件，用于监听原生事件
+		// 而不是组件使用vm.$emit触发的自定义事件
+		nativeOn: {
+			click: this.nativeClickHandler
+		},
+		// 自定义指令
+		directives: [
+			{
+				name: 'my-custom-directive',
+				value: '2',
+				expression: '1+1',
+				arg: 'foo',
+				modifiers: {
+					bar: true
+				}
+			}
+		],
+		// 作用域slot
+		// { name: props => VNode |Array<VNode> }
+		scopedSlots: {
+			default: props => h('span', props.text)
+		},
+		// 如果子组件有定义的slot的名称
+		slot: 'name-of-slot',//是放这里吗？？？
+		// 其他特殊顶层级属性
+		key: 'myKey',
+		ref: 'myRef'
+	},
+	// 3{String|Array}
+	// 子节点(VNodes),可选
+	[
+		createElement('h1','hello world'),
+		createElement(MyComponent,{
+			props: {
+				someProp:'foo'
+			}
+		}),
+		'bar'
+	]
+)
+
+/* 
+以往在template，在组件上的标签是使用v-bind:绑定，
+而在render函数都将其写在了数据对象里。
+
+就此例而言，template的写法明显比render写法要可读而且简洁，
+所以要在合适的场景使用render函数，否则只会增加负担
+ */
+</script>

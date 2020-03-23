@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>data必须是函数 return</title>
+</head>
+<body>
+	<!-- /*  除了template选项外，组件还可以像vue实例那样使用其他的选项，
+	比如data，computed、methods。但使用data时，和实例有区别，
+	data必须是函数，然后把数据return出去
+	*/ -->
+	<div id="app">
+		<my-component></my-component>
+	</div>
+	<!-- JavaScript对象是引用关系，所以如果return出的对象引用了外部的一个对象，
+	 那用这个对象就是共享的，任何一方都会同步，例如
+	 -->
+	<div id="app2">
+		<my-component2></my-component2>
+		<my-component2></my-component2>
+		<my-component2></my-component2>
+		<br>
+		<!-- 组件使用了3次，但点击任意一个button,3个的数字都会加1.
+		因为共享了data-->
+		<my-component3></my-component3>
+		<my-component3></my-component3>
+		<my-component3></my-component3>
+	</div>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script>
+	Vue.component('my-component',{
+		template:`<div>{{message}}</div>`,
+		data:function(){
+			return {
+				message:'return出去的数据'
+			}
+		}
+	});
+	var app = new Vue({
+		el:"#app"
+	});
+	
+	var data = {
+		counter: 0 
+	};
+	// 共享的return
+	Vue.component('my-component2',{
+		template: `<button @click='counter++'>{{counter}}</button>`,
+		data: function(){
+			return data;
+		}
+	});
+	//正确的return
+	Vue.component('my-component3',{
+		template: `<button @click='counter++'>{{counter}}</button>`,
+		data: function(){
+			return {
+				counter: 0
+			}
+		}
+	})
+	var app2 = new Vue({
+		el:'#app2'
+	})
+	
+	
+</script>
+
+</body>
+</html>

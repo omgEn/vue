@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+<div id="app">
+	<my-component :init-count="1"></my-component>
+	<!-- 因为html不区分大小写所以不能用驼峰命名法 -->
+	<!-- <my-component2 :color="orange"></my-component2> -->
+	<my-component2 :width='100'></my-component2>
+	<!-- 用color，orange未定义 -->
+</div>
+
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script>
+/* Vue2.x通过props传递数据是单向的，只能父传子
+	为了父子组件解耦，避免子组件无意中修改了父组件的状态 
+Vu1.x 提供了.sync修饰符支持双向绑定
+/*
+情况一：
+组件中声明了数据count，它在组件初始化时或取得initCount,之后就与之无关了，
+只用维护count即可，这样可以避免直接操作initCount
+ */
+//1 props 是数组
+	Vue.component('my-component',{
+		props:['initCount'],
+		template:`<div>{{count}}</div>`,
+		data:function(){
+			return {
+				count: this.initCount
+			}
+		}
+	});
+/* 
+情况二：将prop作为需要被转变的原始值传入。用计算属性即可
+*/
+	Vue.component('my-component2',{
+		props:['width'],//从父级传入
+/*在js中，数组和对象是引用类型，指向同一内存空间
+所以对象props是对象和数组时，在子组件内改变是会影响父组件的
+	*/
+		template:`<div :style="style2">组件内容</div>`,
+		computed:{//计算属性
+			style2: function(){
+				return {
+					width: this.width+'px'
+					// width的值
+				}
+			}
+		}
+	});
+	var app = new Vue({
+		el: '#app'
+	});
+	
+// 2 当prop需要验证时，props要是对象
+</script>
+</body>
+</html>

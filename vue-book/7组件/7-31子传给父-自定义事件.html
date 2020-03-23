@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+<!-- 组件通信：父子、兄弟、跨级
+父传子：props
+子传父：$emit
+ -->
+<!-- 子传父：自定义事件
+js的观察者模式：dispatchEvent,addEventListener
+子组件用$emit()来触发事件，父组件用$on()来监听子组件的事件
+ -->
+ <!-- 父组件也可直接在子组件的自定义标签上使用v-on来监听子组件触发的自定义事件 
+ 即：父利用v-on监听子组件触发的自定义事件
+ -->
+<div id="app">
+	<p>总数:{{total}}</p>
+	<my-component
+		@increase="handleGetTotal"
+		@reduce="handleGetTotal"
+	></my-component>
+	<!--
+	除了用v-on在组件上监听自定义事件，也可以监听DOM事件，
+	用.native修饰符监听一个原生事件，监听该组件的根元素
+	如何使用的
+	 -->
+	<!-- <my-component v-on:click.native="handleClick"></my-component> -->
+</div>
+
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script>
+	Vue.component('my-component',{
+		props:[],
+		template: `<div>
+			<button @click="handleIncrease">+1</button>|
+			<button @click="handleReduce">-1</button>|
+		</div>`,
+		data:function(){
+			return {
+				counter: 0
+			}
+		},
+		methods: {
+			handleIncrease: function(){
+				this.counter++;
+				this.$emit('increase',this.counter);
+			},
+			handleReduce: function(){
+				this.counter--;
+				this.$emit('reduce',this.counter);
+				//此处的reduce用于html中的@reduce
+				// $emit(自定义事件的名称，要传递的数据（0或多个）)
+			}
+		}
+	});
+	var app = new Vue({
+		el: '#app',
+		data: {
+			total: 0
+		},
+		methods: {
+			handleGetTotal:function(total){
+				this.total = total;
+			}
+		}
+	})
+</script>
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+<!-- 
+表单控件：单选，多选，下拉选择，输入框
+v-model:用于在表单元素双向绑定数据
+ -->
+<div id="app">
+	<input type="text" v-model="message" placeholder="中文enter才改变">
+	<p>输入的内容是:{{message}}</p>
+	<!-- input的message与vue的message双向绑定； -->
+	<hr>
+	<textarea v-model="text" placeholder="输入..." name="" id="" cols="30" rows="10"></textarea>
+	<p>输入的内容是：</p>
+	<p style="white-space:pre">{{text}}</p>
+</div>
+<!-- 
+使用v-model后，表单控件显示的值只依赖所绑定的值，不在关心初始值value属性；
+对于<textarea></textarea>之间插入的值，也不会生效
+注：使用v-model,如果输入的是中文，只有当这个字敲出后才会更新。
+如果想实时更新可以用@input代替v-model.
+v-model也是特殊的语法糖，只是他会在不同的表单上智能处理
+-->
+<div id="app2">
+	<input type="text" @input="handleInput" placeholder="中文动态改变">
+	<p>输入的内容是：{{message}}</p>
+</div>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script>
+	var app = new Vue({
+		el:'#app',
+		data: {
+			message: 'daf',
+			text:''
+		}
+	});
+	var app = new Vue({
+		el:'#app2',
+		data: {
+			message: 'app2',
+			text:''
+		},
+		methods:{
+			handleInput:function(e){
+				this.message= e.target.value
+			}
+		}
+	});
+</script>
+
+</body>
+</html>

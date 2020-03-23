@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+<!-- 
+当不想改变原数组，想通过一个数组的副本做过滤或排序的显示，可以使用computed 
+ -->
+<div id="app">
+	<ul>
+		<template v-for="book in filterBooks">
+			<li>{{book.name}}</li>
+			<li>{{book.author}}</li>
+		</template>
+	</ul>
+</div>
+
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script>
+	Vue.component('my-select',{
+		props:[],
+		template:``
+	});
+	var app = new Vue({
+		el:'#app',
+		data:{
+			books:[
+				{
+					name:'vue',
+					author:'d'
+				},
+				{
+					name:'ja',
+					author:'d'
+				},
+				{
+					name:'高程',
+					author:'d'
+				}
+			]
+		},
+		computed:{
+			filterBooks:function(){
+				return this.books.filter(function(book){
+					return book.name.match(/javascript/);
+				})
+			},
+			sortBooks:function(){
+				return this.books.sort(function(a,b){
+					return a.name.length<b.name.length
+				})
+			}
+		}
+		
+	})
+</script>
+
+</body>
+</html>

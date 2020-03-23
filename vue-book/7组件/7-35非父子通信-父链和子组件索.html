@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+<!-- 
+除了中央事件总线bus外，还有两种方法实现组件间通信：父链和子组件索引
+-->
+<!-- 父链：
+尽管vue允许这样操作，但子组件应该避免依赖父组件的数据，更不该去修改它的数据，
+这样是紧耦合，只看父组件，很难理解父组件的状态，因为它可能被任意组件修改
+理想情况下，只有组件自己能够修改它的状态，
+父子组件最好还是通过props和$emit来通信
+-->
+<div id="app">
+	{{message}}
+	<component-a></component-a>
+</div>
+
+<!-- 子组件索引 -->
+<div id="app2">
+	<button @click='handleRef'>通过ref获取子组件实例</button>
+	<component-b ref="comA"></component-b>
+</div>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script>
+	Vue.component('component-a',{
+		template:`<button @click='handleEvent'>通过父链直接修改数据</button>`,
+		methods:{
+			handleEvent:function(){
+				//访问到父链后，可以做任何操作，比如直接修改数据
+				this.$parent.message = '来自组件component-a的内容';
+				// 此时改变了message的值
+			}
+		}
+	});
+	var app = new Vue({
+		el:'#app',
+		data: {
+			message:''
+		}
+	})
+	
+	//子组件索引：在父里面改变子
+	Vue.component('component-b',{
+		template:`<div>子组件</div>`,
+		data:function(){
+			return {
+				message:'子组件内容'
+			}
+		}
+	});
+	var app2 = new Vue({
+		el: '#app2',
+		methods:{
+			handleRef:function(){
+				//通过$refs来访问指定的实例
+				var msg = this.$refs.comA.message;
+				console.log(msg);
+			}
+		}
+	});
+/* 
+在父组件模板中，子组件标签使用ref指定一个名称，并在父组件内通过this.$refs来访问指定名称的子组件 
+ */
+/* 
+$refs只在组件渲染完后才填充，并且它是非响应式 的。
+它仅仅作为一个直接访问子组件的应急方案，应当避免在模板或计算属性中使用$refs
+*/
+/* 
+Vue会自动去判断是普通标签还是组件
+<div id="app">
+	<p ref="p">内容</p>
+	<child-component ref="child"></child-component>
+</div>
+*/
+</script>
+
+</body>
+</html>

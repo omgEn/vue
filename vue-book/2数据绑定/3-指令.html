@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+<div id="app">
+	<p v-if='show'>显示这段文本</p>
+	<button v-on:click="handleClose">点击隐藏</button>
+	<button v-on:click="show=true">点击展开</button>
+	<a v-bind:href="url">链接</a>
+	<img v-bind:src="imgUrl">
+	
+</div>
+<!-- 
+注：
+1数据驱动DOM是vue的核心理念，所以不到万不得已不要主动操作DOM，只要维护好数据，DOM的事Vue会处理
+2 v-bind基本用途是动态更新HTML元素上的属性
+3 v-on用来绑定事件监听器，做交互。
+ 在普通元素上，v-on可以监听原生的DOM事件，click,dblclick,keyup,mousemove
+ 也可以是方法，写在methods里面。
+
+ -->
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script>
+	var app = new Vue({
+		el:'#app',
+		data:{
+			show: true,
+			url: 'http://www.github.com',
+			imgUrl:'http://xxx.xx.xx'
+		},
+		methods: {
+			handleClose:function(){
+				this.show = false
+			}
+		}
+	});
+	var app2 = new Vue({
+		el:'app2',
+		//一些常见写法
+		methods:{
+			handleClose:function(){
+				this.close();
+				//这里调用内部方法
+			},
+			close:function(){
+				this.show = false;
+			},
+			init:function(text){
+				console.log(text);
+			}
+		},
+		mounted:function(){
+			this.init('在初始化时调用');
+		}
+	});
+	app2.init('通过外部调用');
+/* 
+语法糖：在不影响功能的情况下，添加某种方法实现同样的效果
+v-bind:=:
+v-on:=@
+ */
+</script>
+
+</body>
+</html>

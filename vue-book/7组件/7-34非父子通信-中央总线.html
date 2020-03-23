@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+<!-- 非父子通信，使用一个空的Vue实例作为中央事件总线(bus) -->
+<!-- 事件总线：通过‘订阅-发布’模式实现组件之间的直接通信
+ var bus = new Vue();
+ bus.$emit('频道')发射消息
+ bus.$on('频道')收到消息
+ -->
+<div id="app">
+	{{message}}
+	<component-a></component-a>
+</div>
+
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script>
+	var bus = new Vue();
+	Vue.component('component-a',{
+		props:[],
+		template:`<button @click='handleEvent'>传递事件</button>`,
+		methods:{
+			handleEvent:function(){
+				bus.$emit('on-message','来自组件component-a的内容');
+				// $emit(自定义事件的名称，要传递的数据（0或多个）)
+			}
+		}
+	});
+	var app = new Vue({
+		el:'#app',
+		data:{
+			message:''
+		},
+		mounted:function(){
+			var _this = this;
+			//在实例初始化时，监听来自bus实例的事件
+			bus.$on('on-message',function(msg){
+				_this.message = msg;
+			});
+		}
+	})
+</script>
+<!-- 
+先创建了一个空的bus的vue实例。在app初始化时，在生命周期mounted构造函数里面监听了来自bus的事件on-message,
+ 而在组件component-a中，点击按钮会通过bus把事件on-message发出去，
+ 此时app就会接收到来自bus的事件，进而在回调里完成自己的业务逻辑。
+ 
+ 这种方法巧妙而轻量地实现了任何组件间的通信。
+ 还可以拓展bus，添加data，methods，computed等选项，这些都是公用的。
+ 在协同开发过程中，长需要共享一些通用的信息：用户登录的昵称、性别、邮箱、用户的授权token等。
+ 只需要初始化时让bus获取一次，anytime，任何组件就可以从中直接使用了。
+ 在单页面富应用（SPA）中很实用。
+ -->
+</body>
+</html>

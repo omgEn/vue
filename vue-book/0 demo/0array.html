@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+<script>
+	var numbers = [1,2,3,4,5,4,3,2,1];
+	//every:每一项都是true才会返回true
+	var everyResult = numbers.every(function(item,index,array) {
+		return (item>2);
+	});
+	console.log(everyResult);//false
+	//some:有一项是true就是返回true
+	var someResult = numbers.some(function(item,index,array) {
+		return (item>2);
+	});
+	console.log(someResult);//true
+	//filter:过滤数组，会返回true的项组成的数组,对原数组没有影响
+	var filterResult = numbers.filter(function(item,index,array){
+		return (item>2);
+	});
+	console.log(filterResult);//[3,4,5,3];
+	console.log(numbers);//[1,2,3,4,5,4,3,2,1];
+	//map:返回一个新数组，对原数组没有影响
+	var mapRequest = numbers.map(function(item, index, array){
+		return item*2;
+	});
+	console.log(mapRequest);//[2,4,6,8,10,8,6,4,2];
+	console.log(numbers);//[1,2,3,4,5,4,3,2,1];
+	//forEach
+	numbers.forEach(function(item,index,array){
+		//这个方法没有返回值，本质上与使用for循环迭代数组一样
+	});
+	
+</script>
+</body>
+</html>

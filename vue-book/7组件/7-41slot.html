@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+<!-- 
+头部：一级导航，二级导航 
+左侧列表，右侧正文，底部版权信息
+-->
+<app>
+	<menu-main></menu-main>
+	<menu-sub></menu-sub>
+	<div class="container">
+		<menu-left>
+			{{message}}
+		</menu-left>
+		<container></container>
+		<app-footer></app-footer>
+	</div>
+</app>
+<!-- 这里的message就是一个slot它绑定的是父组件的数据而不是组件chile-component的数据 
+即：slot分发的内容，作用域是在父组件上的
+比如<chlid-component v-show="showChild"></div>
+此处的showChild是绑定的父组件的数据
+即：var app = new Vue({
+	data: {
+		showChild:true
+	}
+})
+
+如果要在子组件上绑定应该是：
+	Vue.component('child-component',{
+		template:`<div v-show="showChild">子组件</div>`,
+		data: function(){
+			return{
+				showChild: true
+			}
+		}
+	})
+-->
+<!-- 
+当需要让组件混合使用，混合父组件的内容与子组件的模板时，用到slot，
+ 过程称为内容分发transclution，以<app>为例，有两个特点：
+ <app>组件不知道它的挂载点会有什么内容。挂载点的内容是有<app>的父组件决定的
+ <app>组件很可能由它自己的模板
+ 
+ props传递数据，events触发事件和slot内容分发就构成了Vue组件的3个API来源，
+在复杂的组件也是由这3部分构成的
+-->
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script>
+	Vue.component('my-select',{
+		props:[],
+		template:``
+	});
+	var app = new Vue({
+		el:'#app'
+	})
+</script>
+
+</body>
+</html>

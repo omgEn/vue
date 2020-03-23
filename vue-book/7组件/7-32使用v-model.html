@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+<div id="app">
+	<p>总数:{{total}}</p>
+	<my-component v-model="total"></my-component>
+</div>
+<!-- 两种写法相同，第一种便捷 
+$emit('input')这里绑定的事件都是input
+-->
+<div id="app2">
+	<p>总数：{{total}}</p>
+	<my-component2 @input="handleGetTotal"></my-component2>
+</div>
+
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script>
+	Vue.component('my-component',{
+		props:[],
+		template: `<button @click="handleClick">+1</button>`,
+		data:function(){
+			return {
+				counter: 0
+			}
+		},
+		methods: {
+			handleClick:function(){
+				this.counter++;
+				this.$emit('input',this.counter);
+				// 这个input哪来的？与v-model有关吗
+				/* 这个事件名是特殊的input，本来是@input="handle"，
+				但这里直接使用了v-model绑定一个数据total，
+				 这是一个语法糖
+				 */
+			}
+		}
+	});
+	var app = new Vue({
+		el: '#app',
+		data: {
+			total: 0
+		}
+	});
+	
+	
+	Vue.component('my-component2',{
+		props:[],
+		template: `<button @click="handleClick">+1</button>`,
+		data:function(){
+			return {
+				counter: 0
+			}
+		},
+		methods: {
+			handleClick:function(){
+				this.counter++;
+				this.$emit('input',this.counter);
+			}
+		}
+	});
+	var app2 = new Vue({
+		el:"#app2",
+		data: {
+			total: 0
+		},
+		methods:{
+			handleGetTotal:function(total){
+				this.total = total;
+			}
+		}
+	})
+</script>
+
+</body>
+</html>

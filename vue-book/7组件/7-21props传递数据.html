@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+<!-- 组件要把模板内容复用，组件通信
+父组件的模板包含子组件，父传给子数据通过props实现；
+使用选项props来声明需要从父级接收的是数据：字符串数组或对象
+ -->
+ <!-- 例子：数组，接收一个来自父级的数据message，并在组件中渲染 -->
+<div id="app">
+	<my-component message="来自父组件的数据" warn-text="error"></my-component>
+	<!-- 数据不是写死的，而是来自父级的动态数据，
+	用v-bind动态绑定props的值，当父组件的数据变化时，也会传递给子组件 
+	-->
+	<input type="text" v-model="parentMessage">
+	<my-component :msg="parentMessage"></my-component>
+	<!-- 使用:msg冒号来绑定父元素的 -->
+</div>
+<hr>
+<!-- 
+当要直接传递数字、布尔值、数组、对象，而且不使用v-bind，传递的仅仅是字符串
+ -->
+<div id="app2">
+	<my-component2 message="[1,2,3]"></my-component2>
+	<my-component2 :message="[1,2,3]"></my-component2>
+	<!-- 
+	 7,3,不用v-bind传递的仅仅是字符串
+	 -->
+</div>
+
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script>
+	Vue.component('my-component',{
+		props:['message','warnText','msg'],
+		template: `<div>{{message}},{{warnText}},{{msg}}</div>`
+		//因为HTML特性不区分大小写，所以这里驼峰命名的html中药改成-
+		/* 此处的data主句与props数据区别是：
+		 props中的数据是来自父级，
+		 data中的数据是来自组件自己，作用域是组件本身
+		 这两种数据都可以从模板template及计算属性computed和方法methods中使用
+		 */
+		
+	});
+	var app = new Vue({
+		el: '#app',
+		data:{
+			parentMessage:'d'
+		}
+	})
+	
+	Vue.component('my-component2',{
+		props:['message'],
+		template:`<div>{{message.length}},{{message}}</div>`
+	});
+	var app2 = new Vue({
+		el: '#app2'
+	})
+</script>
+
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+<div id="app">
+	<input type="text" v-model='name' placeholder="your name">
+	<p>hello {{name}}</p>
+	<input type="radio" checked value="name">
+	<hr>互斥选框
+	<input type="radio" name='a' value="">
+	<input type="
+	radio" name='a' >
+	<input type="radio" name="a">
+	<hr>多选框
+	<input type="checkbox">
+	<input type="checkbox">
+</div>
+
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script>
+	var app = new Vue({
+		el:'#app',
+		data: {
+			name:""
+		}
+	})
+</script>
+
+</body>
+</html>

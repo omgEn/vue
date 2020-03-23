@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+<!-- 锚点链接 封装成一个组件 -->
+<div id="app">
+	<anchor :level='2' title="特性">特性</anchor>
+</div>
+
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<!-- 
+<script type="text/x-template" id="anchor">
+	<div>
+		<h1 v-if="level===1">
+			<a :href="'#'+title"><slot></slot></a>
+		</h1>
+		<h2 v-if="level===2">
+			<a :href="'#'+title"><slot></slot></a>
+		</h2>
+		<h3 v-if="level===3">
+			<a :href="'#'+title"><slot></slot></a>
+		</h3>
+		<h4 v-if="level===4">
+			<a :href="'#'+title"><slot></slot></a>
+		</h4>
+		<h5 v-if="level===5">
+			<a :href="'#'+title"><slot></slot></a>
+		</h5>
+		<h6 v-if="level===6">
+			<a :href="'#'+title"><slot></slot></a>
+		</h6>
+	</div>
+</script>
+ -->
+<script>
+	Vue.component('anchor',{
+		template:'#anchor',
+		props: {
+			level:{
+				type: Number,
+				require: true
+			},
+			title:{
+				type: String,
+				default: ''
+			}
+		},
+		//render改写
+		render: function(createElement){
+			return createElement(
+				'h'+this.level,
+				[
+					createElement(
+						'a',
+						{
+							domProps:{
+								href:'#'+this.title
+							}
+						},
+						this.$slots.default
+					)
+				]
+			)
+		}
+	});
+// render函数通过创建createElement参数来创建Virtual DOM，结构精简和多
+	var app = new Vue({
+		el:'#app'
+	});
+</script>
+</body>
+</html>

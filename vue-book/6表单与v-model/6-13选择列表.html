@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+<div id="app">
+<!-- 
+option如果有value属性，则v-model会优先匹配value的值；
+ 若没有就会匹配<option>的text
+ 比如第二项是js而不是JavaScript
+ -->
+	<select name="" id="" v-model='selected'>
+		<option>html</option>
+		<option value="js">javaScript</option>
+		<option>css</option>
+	</select>
+	<p>选择的项是{{selected}}</p>
+</div>
+
+<!-- 
+multiple多选
+v-model绑定的是数组，与复选框用法类似
+ -->
+<div id="app2">
+	<select name="" id="" v-model='selected' multiple>
+		<option value="html">html</option>
+		<option value="js">javaScript</option>
+		<option>css</option>
+	</select>
+	<p>选择的项是{{selected}}</p>
+</div>
+
+<!-- 动态数据v-for循环-->
+<hr>动态数据
+<div id="app3">
+	<select v-model="selected">
+		<option v-for='option in options' :value='option.value'>{{option.text}}</option>
+	</select>
+	<p>选择的项是:{{selected}}</p>
+</div>
+
+<hr>绑定值
+<div id="app4">
+	<select v-model='selected'>
+		<option :value='{number:123}'>123</option>
+		<option :value='number2'>23</option>
+	</select>
+	{{selected.number}}//会动态改变
+	<br>{{number2}}//不会
+</div>
+<!-- 当选中时，app.selected是一个Object,
+ 所以app.selected.number===123-->
+
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script>
+	var app = new Vue({
+		el:'#app',
+		data: {
+			selected:'html'
+		}
+	});
+	var app = new Vue({
+		el:'#app2',
+		data: {
+			selected:['html','css']
+		}
+	});
+	var app3 = new Vue({
+		el: "#app3",
+		data: {
+			selected:'html',
+			options:[
+				{
+					text:'html',
+					value: 'html'
+				},
+				{
+					text:'JavaScript',
+					value: 'js'
+				},
+				{
+					text:'css',
+					value: 'css'
+				}
+			]
+		}
+	});
+	/* 
+	 虽然用选择列表select控件可以简单完成下拉选择的需求，但在实际业务中不常用，
+	 因为它的样式依赖平台和浏览器，无法统一，也不美观，功能也受限，
+	 比如不支持搜索，所以常见的解决方案是用div模拟一个类似的控件
+	 */
+	var app4 = new Vue({
+		el:'#app4',
+		data: {
+			selected: '',
+			number2:2
+		}
+	})
+</script>
+
+</body>
+</html>

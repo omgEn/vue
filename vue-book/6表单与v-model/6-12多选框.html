@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>复选框</title>
+</head>
+<body>
+<p>单独使用</p>
+<div id="app">
+	<!-- 这里的v-model会自动与value值绑定吗？ -->
+	<input type="checkbox" v-model="checked" id="checked">
+	<label for="checked">选择状态：{{checked}}</label>
+	
+	<hr>动态绑定数据
+	<input type="checkbox" v-model='toggle' 
+	:true-value='value1' :false-value='value2'>
+	<label for="">复选框</label>
+	<p>{{toggle}}</p>
+	<p>{{value1}}</p>
+	<p>{{value2}}</p>
+<!-- 勾选时，app.toggle==app.value1,未勾选：app.toggle==app.value2 -->
+</div>
+
+<hr>组合使用
+<!-- 组合使用：v-model与value一起 
+这些复选框都绑定到同一个数组类型的数据，value的值在数组当中，就会选中这一项。
+这个过程也是双向的。在勾选时，value的值也会自动push到数组中
+-->
+<div id="app2">
+	<input type="checkbox" v-model='checked' value='html' id='html'>
+	<label for="html">html</label>
+	<br>
+	<input type="checkbox" v-model='checked' value='js' id='js'>
+	<label for="js">js</label>
+	<br>
+	<input type="checkbox" v-model='checked' value='css' id='css'>
+	<label for="css">html</label>
+	<br>
+	<p>选择的项是{{checked}}</p>
+</div>
+
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script>
+	var app = new Vue({
+		el:'#app',
+		data: {
+			checked: false,
+			
+			toggle: false,
+			value1: 'a',
+			value2: 'b'
+		}
+	});
+	var app2 = new Vue({
+		el:'#app2',
+		data: {
+			checked: ['html','css']
+		}
+	})
+</script>
+
+</body>
+</html>
