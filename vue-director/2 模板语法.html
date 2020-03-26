@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+<div id="app">
+	<!-- <a v-bind:['foo'+bar] = "value"></a>
+	attribute names cannot contain spaces, quotes, <, >, / or =. -->
+</div>
+<!-- 
+Vue.js使用了基于HTML的模板语法，允许开发者声明式地将DOM绑定至底层Vue;
+所以Vue.js的模板都是合法的HTML，
+在底层的实现上，Vue将模板编译成虚拟DOM渲染函数。
+结合响应系统，Vue能够智能计算出最少需要重新渲染多少组件，并把DOM操纵次数减到最少。
+
+如果熟悉DOM且js，可以不用模板，直接写渲染函数JSX
+ -->
+<!-- 
+{{}} 会解释成普通文本，而非HTML代码
+v-once 插值只改变一次
+v-html:认识html代码
+	注：不能使用v-html来复合局部模板，因为vue不是基于字符串的模板引擎。
+	对于用户界面ui，组件更适合作为可重用和可组合的基本单位。
+	直接作为HTML——会忽略解析属性值中的数据绑定。
+	不要任意动态渲染任意的HTML，很容易导致XSS攻击
+	只对可信内容使用HTML插值，不要对用户提供的内容使用插值
+ -->
+ <!-- 
+v-bind:attribute=""给属性绑定，当时true时候这个属性存在
+
+{{}}里面支持js表达式
+{{number+1}}
+{{ok?'yes':'no'}}
+{{message.split('').reverse().join('')}}
+语句和流控制都不会生效。
+
+v-if="true"
+v-bind:href="url"
+
+v-bind:[attributeName] = 'url',attributeName是动态的
+异常情况下，这个值是null，此时可以用于移除绑定。
+任何非字符串类型的值都会触发一个警告
+动态参数表达式约束：空格和引号,<, >, / or =. 在HTML attribute名里是无效的
+可用computed属性代替这种复杂表达式
+
+不要用大写来命名健明，因为浏览器会把attribute名全部强制转为小写
+
+
+v-on:click="doSomingthins" 
+用于监听DOM事件 v-on:事件名="方法名"
+
+修饰符
+	.prevent触发的事件调用event.preventDefault()
+	
+简写：
+	<a v-bind:href="url"></a>
+	<a :href="url"></a>
+	<a v-on:click="doSomething"></a>
+	<a @click="doSomethind">
+	-->
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script>
+	// Vue.component('',{
+	// 	template
+	// });
+	var app = new Vue({
+		el:'#app'
+	});
+</script>
+</body>
+</html>

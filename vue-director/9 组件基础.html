@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+<div id="app">
+	<blog-post title="My journey with Vue"></blog-post>
+	<blog-post title="Blogging with Vue"></blog-post>
+	<blog-post></blog-post>
+	<hr>
+	<blog-post
+	  v-for="post in posts"
+	  v-bind:key="post.id"
+	  v-bind:title="post.title"
+	></blog-post>
+	<hr>插槽
+	<alert-box>
+	  Something bad happened.
+	</alert-box>
+	<hr>动态组件：用is属性绑定，v-bind:is
+	<!-- 组件会在 `currentTabComponent` 改变时改变 -->
+	<!-- <component v-bind:is="currentTabComponent"></component> -->
+	<!-- currentTabComponent可以是已经被注册的的名字，或一个组件的选项对象 -->
+</div>
+<!-- 
+1.组件基础
+组件的复用
+	每次调用一次组件，就会有一个新实例被创建，各自维护它的数据
+	data必须是一个函数:因此每个实例就可以维护一份被返回对象的独立的拷贝
+		data:function(){
+			return{
+				count:0
+			}
+		}
+	因为组件是复用的,所以为了防止data全部用同一个数组对象，所以用函数返回一份独立的
+		
+组件的组织
+通过prop向子组件传递数据
+	当一个值传递给prop特性的时候，它就变成了那个组件实例的一个属性
+	
+单个根元素
+	即每个组件都必须只有一个根元素
+	v-bind:post=posts;//子组件的post绑定父的posts，在props中写post
+
+监听子组件事件——不是很懂？
+	父组件可以通过v-on监听子组件实例的任意事件
+	子组件可以通过内建的$emit通知父组件改变
+	
+在组件上使用v-model
+	支持v-model的自定义输入组件
+	为了让input正常工作，input必须
+		将value特性绑定到一个名为value的prop上
+		在input事件被触发时，将新的值通过自定义的input事件抛出
+	
+通过插槽分发内容
+动态组件
+解析DOM模板使的注意事项
+ -->
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script>
+	Vue.component('blog-post', {
+	  props: ['title'],
+	  template: '<h3>{{ title }}</h3>'
+	});
+	// 插槽使用
+	Vue.component('alert-box',{
+		template:`
+		 <div class="demo-alert-box">
+				<strong>Error!</strong>
+				<slot></slot>
+			</div>
+		`
+	});
+	var app = new Vue({
+		el:'#app',
+		data: {
+			posts: [
+				{ id: 1, title: 'My journey with Vue' },
+				{ id: 2, title: 'Blogging with Vue' },
+				{ id: 3, title: 'Why Vue is so fun' }
+			]
+		}
+	});
+</script>
+</body>
+</html>

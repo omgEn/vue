@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+
+  <div id='app'>
+    <h1 v-text='msg'></h1>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+<script type="text/javascript">
+	var app = new Vue({
+  el: '#app',
+  data: {
+    msg: '0'
+  },
+  beforeCreate() {
+    console.log('-------------- beforeCreate')
+  },
+  created() {
+    console.log('-------------- created')
+  },
+  beforeMount() {
+    console.log('-------------- beforeMount')
+  },
+  mounted() {
+    console.log('-------------- mounted')
+    // 在这里调接口、swiper组件创建等
+
+    // var that = this
+    // setTimeout(function() {
+    //   console.log('this', this)
+    //   that.msg = '2'
+    // }, 2000)
+    
+    this.timer = setInterval(()=>{
+      console.log(1)
+    }, 1000)
+  },
+  beforeUpdate() {
+    console.log('-------------- beforeUpdate')
+  },
+  updated() {
+    console.log('-------------- updated')
+  },
+  beforeDestroy() {
+    console.log('-------------- beforeDestroy')
+    // 在这里清除各种耗费性能的东西，比如定时器
+    clearInterval(this.timer)
+  },
+  destroyed() {
+    console.log('-------------- destroyed')
+  }
+})
+
+</script>
+</body>
+</html>

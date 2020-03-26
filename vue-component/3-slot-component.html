@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<style>
+		.header {
+		  position: absolute; top: 0; left: 0; right: 0;
+		  height: 60px;background:rgb(0,21,41);color:white;
+		}
+		.aside {
+		  position: absolute; top:60px;
+		  left: 0; bottom: 0;width: 135px;
+		  background:rgb(0,21,41);color:white;
+		}
+		.main {
+		  position: absolute;top:60px;left:135px;right: 0;
+		  bottom: 35px;background-color:white;
+		}
+		.footer {
+		  position: absolute;bottom: 0;left: 135px;
+		  right: 0;height: 35px;
+		  background:rgb(240,242,245);
+		}
+	</style>
+</head>
+<body>
+<div id="app">
+	<my-layout>
+		<!-- 这个插槽的名字叫default -->
+		<template v-slot:default="scope">
+			<h1 v-text="scope.msg"></h1>
+		</template>
+		
+		<!-- v-slot可以写成# -->
+		<template #aside="scope">
+			<h4 v-text="scope.info"></h4>
+		</template>
+		
+		<!-- slot传值，仅在自己的slot中有效，有作用域限制 -->
+		<template v-slot:main="scope">
+			<h4 v-text="scope.item.a"></h4>
+			<h4 v-text="scope.item.b"></h4>
+		</template>
+		<!-- 这个插槽的名字叫footer -->
+		<template v-slot:footer>
+			<h4>底部</h4>
+		</template>
+	</my-layout>
+</div>
+
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script>
+	Vue.component('my-layout',{
+		data:function(){
+			return{
+				msg:'小明',
+				info:'hello',
+				item:{
+					a:'111',
+					b:'222'
+				}
+			}
+		},
+		template:`<div class="container">
+			<div class="header">
+				<slot v-bind:msg="msg"></slot>
+			</div>
+			
+			<div class="aside">
+				<slot name="aside" :info="info"></slot>
+			</div>
+			
+			<div class="main">
+				<slot name="main" :item="item"></slot>
+			</div>
+			
+			<div class="footer">
+				<slot name="footer">
+					<p>ddd</p>
+					<p>ddd</p>
+				</slot>
+			</div>
+		</div>`
+	});
+	var app = new Vue({
+		el:'#app',
+		data:{}
+	});
+</script>
+</body>
+</html>

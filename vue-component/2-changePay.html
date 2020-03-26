@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>支付方式</title>
+	</head>
+	<body>
+		<div id="app">
+			<my-radio v-model="payType"></my-radio>
+			<p>{{payType}}</p>
+		</div>
+	</body>
+	<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+	<script>
+		Vue.component('my-radio',{
+			props:{
+				value:{
+					type:String,
+					require:false,
+					default: '1'
+				}
+			},
+			template:`
+			<div>
+				<input type="radio" name='pay' value='1' :checked='value==1' @change='change'>
+				<span> 微信支付</span>
+				<br>
+				<input type="radio" name='pay' value='2' :checked='value==2' @change='change'>
+				<span> 支付宝支付</span>
+			</div>
+			`,
+			methods:{
+				change(e){
+					this.$emit('input',e.target.value)
+				}
+			}
+		});
+		var app = new Vue({
+			el:'#app',
+			data:{
+				payType:'2'
+			}
+		})
+	</script>
+</html>

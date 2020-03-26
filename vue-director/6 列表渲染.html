@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+<div id="app">
+	只渲染未完成的todo
+	<ul>
+		<li v-for="todo in todos" v-if="!todo.isComplete">
+		{{todo}}
+		</li>
+	</ul
+	<hr>
+		<div id="todo-list-example">
+		  <form v-on:submit.prevent="addNewTodo">
+		    <label for="new-todo">Add a todo</label>
+		    <input
+		      v-model="newTodoText"
+		      id="new-todo"
+		      placeholder="E.g. Feed the cat"
+		    >
+		    <button>Add</button>
+		  </form>
+		  <ul>
+		    <li
+		      is="todo-item"
+		      v-for="(todo, index) in todos"
+		      v-bind:key="todo.id"
+		      v-bind:title="todo.title"
+		      v-on:remove="todos.splice(index, 1)"
+		    ></li>
+		  </ul>
+		</div>
+</div>
+<!-- 
+1.用v-for把一个数组对应为一组元素
+v-for="(item,index) in list"
+在v-for块中，可以访问所有父作用域的属性
+也可用in替代for
+
+2.在v-for里使用对象
+遍历对象的属性
+v-for="(value,name,index) in object"
+(属性值,属性名,)
+{{index}}:{{name}}:{{value}}
+--------------------
+在遍历对象时，会按Object.keys()的结果遍历，
+但不能保证它的结果在不同的js引擎下都一致
+
+3.维护状态
+为每一项都提供一个唯一的key属性，以便能跟踪每个节点的身份
+v-for="item in items" v-bind:key="item.id"
+
+因为就地更新策略，如果数据项的顺序被改变，Vue不会移动DOM元素来匹配数据项的顺序，
+而是就地更新每个元素，并且确保它们在每个索引位置正确渲染。 
+这个默认的模式高效的，
+但只适用于不依赖子组件状态或临时DOM状态的列表渲染输出 啥意思？？
+例如表单输入值
+
+key不要用非基本类型，用字符串或者数值类型的值
+
+4.数组更新检测
+变异方法：
+	push,pop,shift,unshift; splice(),sort,reverse
+非变异数组：不会改变原始数组，而总是返回一个新数组
+	filter,concat,slice
+用一个含有相同元素的数组去替换原来的数组是非常高效的操作
+注：由于js的限制，Vue不能检测以下数组的变动
+即不是响应式的
+	当利用索引直接设置一个数据项
+		vm.items[indexOfItem] = newValue
+		Vue.set(vm.items,indexOfItem,newValue)
+		vm.items.splice(indexOfItem,1,newValue)
+		vm.$set(vm.items,indexOfItem,newValue)
+	当修改数组的长度
+		vm.item.length = newLength
+		vm.items.splice(newLength)
+
+5.对象变更检测注意事项
+由于js限制，Vue不能检测对象属性的添加和删除
+var vm = new Vue({
+  data: {
+    a: 1,
+		userProfile: {
+			name: 'Anika'
+		}
+  }
+})
+// `vm.a` 现在是响应式的
+vm.b = 2
+// `vm.b` 不是响应式的
+
+Vue不允许动态添加根级别的响应式属性。
+Vue.set(vm.userProfile,'age',27)可以
+给userProfile添加了值为27的age属性
+vm.$set(vm.userProfile,'age',27)
+
+有时需要为已有对象赋值多个新属性
+Object.assign(vm.userProfile, {
+  age: 27,
+  favoriteColor: 'Vue Green'
+})
+若想添加新的响应式属性
+vm.userProfile = Object.assign({}, vm.userProfile, {
+  age: 27,
+  favoriteColor: 'Vue Green'
+})
+
+6.显示过滤/排序后的结果
+利用computed
+在computd不适用的情况下，例如在嵌套v-for循环中，??
+<li v-for="n in even(numbers)">
+methods:{
+	even:function(numbers){
+		return numbers.filter(function (number) {
+			return number % 2 === 0
+		})
+	}
+}
+
+7.在v-for里使用值范围
+模板重复对应次数
+<span v-for="n in 10">{{n}}</span>
+
+8.在<template>上使用v-for
+<ul>
+  <template v-for="item in items">
+    <li>{{ item.msg }}</li>
+    <li class="divider" role="presentation"></li>
+  </template>
+</ul>
+
+9.v-for与v-if一同使用
+不推荐，因为v-for的优先级比v-if高
+当指向为某部分渲染节点时，这种优先级的机制很有用
+<li v-for="todo in todos" v-if="!todo.isComplete">
+{{todo}}
+</li>
+只渲染未完成的todo
+ 
+10.在组件上使用v-for
+在2.2.0+版本里，但组件上使用v-for时，key是必须的
+任何数据都不会自动传递到组件里，因为组件有自己独立的作用域！！！
+为了把迭代数据传递到组件里，要用prop
+
+不自动将数据注入到组件里的原因是，这会使得组件与v-for的运作紧密耦合
+明确组件数据的来源能够使组件在其他场合重复使用
+ -->
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script>
+	var app = new Vue({
+		el:'#app',
+		data:{
+			todos:[
+				{value:"1",isComplete:true},
+				{value:"2",isComplete:false},
+				{value:"3",isComplete:false},
+				{value:"4",isComplete:false},
+			]
+		}
+	});
+	
+	Vue.component('todo-item', {
+	  template: '\
+	    <li>\
+	      {{ title }}\
+	      <button v-on:click="$emit(\'remove\')">Remove</button>\
+	    </li>\
+	  ',
+	  props: ['title']
+	})
+	
+	new Vue({
+	  el: '#todo-list-example',
+	  data: {
+	    newTodoText: '',
+	    todos: [
+	      {
+	        id: 1,
+	        title: 'Do the dishes',
+	      },
+	      {
+	        id: 2,
+	        title: 'Take out the trash',
+	      },
+	      {
+	        id: 3,
+	        title: 'Mow the lawn'
+	      }
+	    ],
+	    nextTodoId: 4
+	  },
+	  methods: {
+	    addNewTodo: function () {
+	      this.todos.push({
+	        id: this.nextTodoId++,
+	        title: this.newTodoText
+	      })
+	      this.newTodoText = ''
+	    }
+	  }
+	})
+</script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+<!-- 
+1.基础用法
+v-model会忽略所有表单元素的value，checked，selected特性的初始值，
+而总是将Vue实例的数据作为数据来源。应通过data选项声明初始值
+------------
+v-model在内部为不同的输入元素会用不同的属性并抛出不同的事件：
+	text和textarea使用value属性和input事件
+	checkbox和raido使用checkbox属性和change事件
+	select 将value作为prop和change作为事件
+对于输入中文，它不会立马更新，想处理这个过程，使用input事件
+-----------------------------
+文本
+	<input v-model="message" placeholder="edit me">
+	<p>Message is {{message}}</p>
+多行文本
+	在<textarea>{{text}}</textarea>不会生效，用v-model代替
+	<textarea v-model="message" placeholder="add multiple"></textarea>
+	<p style="white-space:pre-line">{{message}}</p>
+复选框
+	<input>
+单选按钮
+选择框 
+ 
+ 
+ -->	
+<div id="app">
+	单选框checkbox:
+	<input type="checkbox" id="checkbox" v-model="checked">
+	<label for="checkbox">{{ checked }}</label>
+	checked是跟着true|false
+	<hr>
+	<div>
+		多个复选框radio
+		<input type="radio" id="one" value="one" v-model="picked">
+		<label for="one">One</label>
+		<br>
+		<input type="radio" id="two" value="three" v-model="picked">
+		<label for="two">two</label>
+		<p>Picked:{{picked}}</p>
+		picked是跟着value值的
+	</div>
+	<hr>
+	<div>
+		选择框：下拉菜单
+		<select v-model="selected">
+			<option disabled value="">请选择</option>
+			<!-- 这里value=""是为了匹配初始值，否则就是空，未选择的状态 -->
+			<option value="D">A</option>
+			<option>B</option>
+			<option>C</option>
+		</select>
+		<span>Selected:{{selected}}</span>
+		<p>selected是跟着value值走</p>
+	</div>
+	<hr>
+	<div>
+		多选框
+		<select v-model="selected2" multiple style="width: 50px">
+			<option>A</option>
+			<option>B</option>
+			<option>C</option>
+		</select>
+		<span>Selected:{{selected2}}</span>
+		<p>用v-for渲染动态选项</p>
+		<select v-model="selected3">
+			<option v-for="option in options" v-bind:value="option.value">
+				{{option.text}}
+			</option>
+		</select>
+		<span>Selected:{{selected3}}</span>
+		<p>框里面的值是option.text。v-model绑定的是option.value
+		且，v-model是绑定在外层selecte上面的
+		</p>
+	</div>
+</div>
+<hr>2.值绑定
+<!-- 
+2.值绑定
+	单选框
+	单选按钮
+	选择框的选项 
+ -->
+<div id="app2">
+	<!-- 当选中时，`picked` 为字符串 "a" -->
+	<input type="radio" v-model="picked" value="a">
+	<p>picked:{{picked}}</p>
+	<!-- `toggle` 为 true 或 false -->
+	<input type="checkbox" v-model="toggle">
+	<p>toggle:{{toggle}}</p>
+	<!-- 当选中第一个选项时，`selected` 为字符串 "abc" -->
+	<select v-model="selected">
+	  <option value="abc">ABC</option>
+	</select>
+	<p>selected:{{selected}}</p>
+	
+	<input
+	  type="checkbox"
+	  v-model="toggle"
+	  true-value="yes"
+	  false-value="no"
+	>
+	<input type="radio" v-model="pick2" v-bind:value="4">
+	<p>pick:{{pick2}}</p>
+	
+	<select v-model="selected2">
+	    <!-- 内联对象字面量 -->
+	  <option v-bind:value="{ number: 123 }">123</option>
+	</select>
+	<p>selected2:{{selected2}}</p>
+	app2.selected2.number:123
+</div>
+
+<!-- 
+3.修饰符
+.lazy
+	//在“change”时而非“input”时更新
+	<input v-model.lazy="msg" >
+.number:自动将用户的输入值转为数值类型，
+	<input v-model.number="age" type="number">
+.trim：过滤输入的首尾空白符
+	<input v-model.trim="msg">
+	
+4.在组件上使用v-model
+ -->
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script>
+	var app = new Vue({
+		el:'#app',
+		data:{
+			checked:'true',
+			picked:"one",
+			selected:'',
+			selected2:[],
+			selected3:'A',
+			options: [
+				{ text: 'One', value: 'A' },
+				{ text: 'Two', value: 'B' },
+				{ text: 'Three', value: 'C' }
+			]
+		}
+	});
+	
+	var app2 = new Vue({
+		el:'#app2',
+		data:{
+			picked:'',
+			toggle:'',
+			selected:'',
+			pick2:'',
+			selected2:""
+		}
+	})
+	
+	// var app2 = new Vue({
+	// 	el:'app2',
+		
+	// })
+</script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+<!--
+class与style是属性，因此可以用v-bind处理：只需要通过表达式计算出字符串结果即可。
+但字符串拼接易错，因此在将v-bind用于style和class时候， 
+Vue.js做了加强，表达式结果的类型除了字符串之外，还可以是数组或对象
+-->
+<!-- 
+绑定class
+对象语法：
+	v-bind:class="{className:Boolean}"
+	v-bind:class="{active:isActive,'text-danger':hasError}"
+	与computed结合
+数组语法：
+	v-bind:class="[activeClass,errorClass]"
+	data:{
+		activeClass:'active',
+		errorClass: 'text-danger'
+	}
+	===
+	v-bind:class="[isActive?ActiveClass:'',errorClass]"
+用在组件上：
+	当在一个自定义组件上使用class时，
+	这些class将添加到该组件的根元素上，且不会覆盖原先已经穿在的
+	
+	
+绑定内联样式style
+对象语法:
+	v-bind:style="{color:activeColor,fontSize:fontSize+'px}"
+	data:{
+		activeColor: 'red',
+		fontSize: 30
+	}
+	直接绑定在一个对象上比较合适
+	v-bind:style="styleObject"
+	data:{
+		styleObject:{
+			color:'red',
+			fontSize:'13px'
+		}
+	}
+	同样，对象语法常结合返回对象的computed使用
+数组语法：
+	v-bind:style="{baseStyle,overridingStyles}"
+自动添加前缀：
+	v-bind:style使用需要添加浏览器引擎前缀的css属性时，如transfrom，
+		Vue.js会自动侦测并添加相应的前缀
+	浏览器引擎：
+		-webkit-:谷歌，safari，新版opera浏览器，几乎所有的ios系统中的浏览器
+		-moz-:火狐
+		-o-:旧版Opera浏览器
+		-ms-:IS和Edge
+多重值
+	从2.3.0起
+	:style="{display:['-webkit-box','-ms-flexbox','flex']}"
+	这么写只会渲染数组中最后一个被浏览器支持的值。
+ -->
+<div id="class">
+	<div>
+		对象语法：与computed结合
+		<div v-bind:class="classObject">2</div>
+		数组语法
+		<div v-bind:class="[isActive?activeClass:'',errorClass]"></div>
+	</div>
+</div>
+<div id="style">
+	<div></div>
+</div>
+
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script>
+	var app1 = new Vue({
+		el:'#class',
+		data:{
+			isActive: true,
+			error: '',
+			activeClass:'active',
+			errorClass: 'text-danger'
+		},
+		computed:{
+			classObject:function(){
+				return {
+					active: this.isActive && !this.error,
+					// 'text-danger': this.error && this.error.type === 'fatal'
+					'text-danger': !this.error
+				}
+			}
+		}
+	});
+	
+	var app2 = new Vue({
+		el:'#style'
+	});
+</script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+<div id="app">
+	<h1 v-text="msg" v-on:click="deleteApp"></h1>
+</div>
+
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script>
+	// 新建Vue实例
+	var app = new Vue({
+		el:'#app',
+		data: {
+			msg: '2'
+		},
+		// 初始化前：事件&生命周期
+		beforeCreate(){
+			console.log('beforeCreate')
+		},
+		// 初始化后：注入&校验
+		created(){
+			console.log('create')
+		},
+		// 创建vm.$el并用其替换el之前
+		beforeMount(){
+			console.log('beforeMount')
+		},
+		// 挂载之前
+		mounted(){
+			console.log('mounted');
+			// 在这里调接口，swiper组件创建等
+			var that = this;
+			setTimeout(function(){
+				console.log('this',this);
+				that.msg = '组件销毁';
+			},2000);
+			
+			this.timer = setInterval(()=>{
+				console.log(1);
+			},1000)
+		},
+		// 以上会初始化执行
+		
+		// 当data被修改时
+		// 在虚拟DOM重新渲染并应用更新之前
+		beforeUpdate(){
+			console.log('beforeUpdate')
+		},
+		// 在虚拟DOM更新完成后
+		updated(){
+			console.log('updated')
+		},//挂载完毕
+		
+		
+		// 不常用的2个
+		// 被keep-alive缓存的组件激活时调用
+		activated:{
+			
+		},
+		// 在keep-alive缓存的组件停用时调用
+		deactivated:{
+			
+		},
+		
+		
+		// 当调用vm.$destroy()函数时。即实例销毁之前
+		// 解除绑定：销毁子组件以及事件监听器
+		beforeDestroy(){
+			console.log('beforeDestroy');
+			//在这里清除各种耗费性能的东西，比如定时器
+			clearInterval(this.timer);
+			// 是vue实例销毁之前，把定时器关闭，放在内存外泄
+		},
+		// 销毁完毕（子实例也都会被销毁）
+		destroy(){
+			console.log('destroy');
+			// clearInterval(this.timer);
+		},
+		
+		// 当捕获一个来自子孙组件的错误时调用。
+		// 会返回false以阻止该错误继续向上传播
+		errorCapatured(){
+			
+		},
+		// end
+		
+		methods:{
+			deleteApp(){
+				app.$destroy()
+			}
+		}
+	});
+</script>
+</body>
+</html>

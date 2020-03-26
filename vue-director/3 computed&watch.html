@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+	
+<!-- 
+coomputed
+{{}}内使用过多逻辑表达式难以维护，所以引入computed。
+
+也可写成方法，但computed是基于它们的响应式依赖进行缓存的。
+只有在相关响应式依赖发生改变时才会重新求值。而不用每次都执行函数
+
+应用：比如有一个性能开销较大的计算属性A，后面有计算属性依赖于A.
+	若没有缓存，将不需要多次执行A的getter
+如果不希望有缓存，用方法代替 
+ -->
+<div id="computed1">
+	<p>Original message: "{{ message }}"</p>
+	<p>Computed reversed message: "{{ reversedMessage }}"</p>
+</div>
+
+
+<!-- 
+watch:当有一些数据需要随着其他数据变动而变动时，很容易滥用。
+可以用computed简化
+ -->
+<div id="watch">
+	{{ fullName }}
+</div>
+
+
+<!-- 
+计算属性的setter
+计算属性默认只有getter，不过在需要的时候可以提供setter 
+ -->
+<div class="setter">
+	{{ fullName }}
+</div>
+
+<!-- 
+侦听器watch
+虽然computed属性在大多数情况下更合适，
+但需要在数据变化时执行异步或开销较大的操作时，这个方式最有用
+ -->
+<div class="watch">
+	<p>
+		Ask a yes/no question:
+		<input v-model="question">
+	</p>
+	<p>{{ answer }}</p>
+</div>
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+<script>
+	var vm1 = new Vue({
+		el:'#computed1',
+		data:{
+			message:'Hello'
+		},
+		computed:{
+			// 计算属性的 getter 没有副作用
+			// message改变时候reverseMessage也会发生改变
+			reversedMessage: function () {
+				// `this` 指向 vm 实例
+				return this.message.split('').reverse().join('')
+			},
+			now: function(){
+				// 不会在更新，因为Date.now()不是响应式依赖？？？
+				return Date.now();
+				// 每当触发重新渲染时，调用方法将总会再次执行函数
+			}
+		}
+	});
+	
+	var vm2 = new Vue({
+	  el: '#watch',
+	  data: {
+	    firstName: 'Foo',
+	    lastName: 'Bar'
+			// fullName:''
+	  },
+	  watch: {
+	    firstName: function (val) {
+	      this.fullName = val + ' ' + this.lastName
+	    },
+	    lastName: function (val) {
+	      this.fullName = this.firstName + ' ' + val
+	    }
+	  },
+		computed:{
+			// 此时不能在data中设立fullName
+			fullName: function(){
+				return this.firstName+ '' + this.lastName
+			}
+		}
+	});
+	
+	var vm3 = new Vue({
+	  el: '.setter',
+	  data: {
+	    firstName: 'Foo',
+	    lastName: 'Bar'
+			// fullName:''
+	  },
+		computed:{
+			fullName:{
+				// getter
+				get:function(){
+					return this.firstName + ' ' + this.lastName
+				},
+				// setter
+				set: function (newValue) {
+					var names = newValue.split(' ')
+					this.firstName = names[0]
+					this.lastName = names[names.length - 1]
+				}
+			}
+		}
+	});
+	
+	var vm4 = new Vue({
+		el: '.watch',
+		data: {
+			question: '',
+			answer:'I cannot give you an answer until you ask a question!',
+		},
+		watch:{
+			// 如果 `question` 发生改变，这个函数就会运行
+			question: function (newQuestion, oldQuestion) {
+				this.answer = 'Waiting for you to stop typing...'
+				this.debouncedGetAnswer()
+			}
+		},
+		created: function(){
+			// `_.debounce` 是一个通过 Lodash 限制操作频率的函数。
+			// 在这个例子中，我们希望限制访问 yesno.wtf/api 的频率
+			// AJAX 请求直到用户输入完毕才会发出。想要了解更多关于
+			// `_.debounce` 函数 (及其近亲 `_.throttle`) 的知识，
+			// 请参考：https://lodash.com/docs#debounce
+			this.debouncedGetAnswer = _.debounce(this.getAnswer, 500)
+		},
+		methods:{
+			getAnswer:function(){
+				if (this.question.indexOf('?') === -1) {
+					this.answer = 'Questions usually contain a question mark. ;-)'
+					return
+				}
+				this.answer = 'Thinking...';
+				var vm = this
+				axios.get('https://yesno.wtf/api')
+					.then(function (response) {
+						vm.answer = _.capitalize(response.data.answer)
+					})
+					.catch(function (error) {
+						vm.answer = 'Error! Could not reach the API. ' + error
+					})
+			}
+		}
+	})
+// 总结：computed用于需要缓存，应用场景比较多
+// watch默认有get，也可以设置set。异步操作常用于这里
+// 在数据变化时执行异步或开销较大的操作时，watch方式最有用
+</script>
+</body>
+</html>

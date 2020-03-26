@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+<div id="app">
+	
+</div>
+<!-- 
+1. 监听事件
+v-on监听DOM事件，并在触发时运行一些js代码
+<button v-on:click="count+=1">
+
+2. 事件处理方法
+复杂逻辑的js代码直接写在v-on是不可行的
+调用方法的名称
+
+3. 内联处理器中的方法
+:click="say"//方法名
+:click="say('hi')"//直接调用
+有时访问内联语句处理器中访问原始的DOM事件
+<button v-on:click="warn('From cannot be sumbitted yet',$event)">
+methods:{
+	warn: function(messge,event){
+		//现在可以访问原生事件对象
+		if(event){
+			event.preventDefault()
+		}
+		alert(message)
+	}
+}
+
+4. 事件修饰符
+eg:v-on:click.stop
+event.preventDefaullt()
+event.stopPropagation()
+方法只有纯粹的数据逻辑，而不是处理DOM事件细节
+.stop 阻止冒泡
+.prevent 提交是不再重载页面
+.capture 添加事件监听器时使用事件捕获模式。？
+	即内部元素触发的事件先在此处理，然后才交由内部元素进行处理
+.self 只在event.target是当前元素自身时触发，即事件不是从内部元素触发的
+.once 点击事件只会触发一次（还可用于自定义的组件事件上）
+.passive 2.3.3新增，默认行为会立即触发
+	v-on:scroll.passive="onScroll",
+		滚动行为会立即触发，而不会等到onScroll完成
+	.passvie和.prevent不能一起使用，因为.prevent将会被忽略
+顺序很重要
+	v-on:ckick.prevent.self 会阻止所有的点击
+	v-on:click.self.prevent 只会阻止对元素自身的点击
+
+5. 按键修饰符
+v-on:keyup.enter="submit"
+v-on:keyup.page-down = "onPageDown"
+????//只有当$event.key=PageDown的时候会被调用
+
+v-on:keyup.13="submit"  keyCoke被MDN废弃了
+.enter
+.tab
+.delete (捕获“删除”和“退格”键)
+.esc
+.space
+.up
+.down
+.left
+.right
+可通过全局config.keyCode对象自定义按键修饰符名
+Vue.config.keyCodes.f1 = 12
+方向键，esc等在IE9中有不同的key值，所以用内置的修饰符是首选
+
+6. 系统修饰键
+2.1.0新增
+.ctrl
+.alt
+.shift
+.meta 花键
+@keyup.alt.67="clear" alt+c
+@click.ctrl="doSomethind" ctrl+click
+?
+.exact 2.5.0 新增
+@click.ctrl="" zlt或shift一同被按下时也会触发
+@click.ctrl.exact="" 有且只有ctrl被按下的时候才会触发
+@click.exact="" 没有任何系统修饰符被按下的时候触发
+
+鼠标按钮修饰符 2.2.0新增
+.left
+.right
+.middle
+
+7. 为什么在HTML中监听事件
+ -->
+<script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+<script>
+	Vue.component('',{
+		template
+	});
+	var app = new Vue({
+		el:'#app'
+	});
+</script>
+</body>
+</html>
